@@ -2,20 +2,102 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>家計簿アプリ</title>
     <link rel="manifest" href="manifest.json">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="調査フォーム">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="家計簿">
     <link rel="apple-touch-icon" href="icon-192.png">
+
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
+        :root {
+            --header-height: 44px;
+            --ios-blue: #007AFF;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; 
+            height: 100%; width: 100%;
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+            overflow: hidden; 
+        }
+
+        /* 画面端スワイプでの「戻る」を無効化 */
+        body {
+            overscroll-behavior-x: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* iOS風すりガラスヘッダー */
+        #app-bar {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.88);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
+            /* ノッチ（切り欠き）部分の余白を自動確保 */
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .toolbar {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000;
+            margin: 0;
+        }
+
+        /* 更新ボタン */
+        .refresh-btn {
+            position: absolute;
+            right: 16px;
+            background: none; border: none;
+            color: var(--ios-blue);
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        /* フォーム表示エリア（ヘッダー分だけ下げる） */
+        #content {
+            width: 100%;
+            height: 100%;
+            padding-top: calc(env(safe-area-inset-top) + var(--header-height));
+            box-sizing: border-box;
+            background-color: #f0f0f7; /* Google Formの背景色に近いグレー */
+        }
+
+        iframe { 
+            width: 100%; height: 100%; border: none; 
+            /* スムーズなスクロールを有効化 */
+            -webkit-overflow-scrolling: touch; 
+        }
     </style>
 </head>
 <body>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdy1n9RZonEIMjZyqRlzRIY9-0nU-N72OGK1V9LDsTE6lRQ4g/viewform?embedded=true">読み込み中...</iframe>
+    <header id="app-bar">
+        <div class="toolbar">
+            <h1 class="app-title">家計簿アプリ</h1>
+            <button class="refresh-btn" onclick="location.reload();">更新</button>
+        </div>
+    </header>
+
+    <main id="content">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdy1n9RZonEIMjZyqRlzRIY9-0nU-N72OGK1V9LDsTE6lRQ4g/viewform?embedded=true">読み込み中...</iframe>
+    </main>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -23,8 +105,4 @@
         }
     </script>
 </body>
-
 </html>
-
-
-
